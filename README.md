@@ -39,6 +39,15 @@ docker compose up --build
 
 This will start both the app and the in-memory database (if defined in docker-compose.yml).
 
+### Postman Collection
+
+The Postman Collection and Environment files are included in the `postman/` folder.
+
+- `postman/saving-account-poc.postman_collection.json`
+- `postman/saving-account-local.postman_environment.json`
+
+You can import them into Postman to quickly try out the API endpoints.
+
 ## API Endpoints
 
 ### Auth
@@ -195,6 +204,7 @@ This guide walks you through how to use the Saving Account system from login to 
 - Transaction verification uses Caffeine cache, default TTL = 60s.
 - Confirm API will fail if cache expired or request mismatches.
 - All secure endpoints require JWT token in `Authorization` header.
+- You can also find a ready-to-use Postman Collection in the `/postman` folder.
 
 ---
 © 2025 Saving Account Demo
