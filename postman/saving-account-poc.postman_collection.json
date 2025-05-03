@@ -1,0 +1,1271 @@
+{
+	"info": {
+		"_postman_id": "19b1a514-14e4-4c63-9044-97625205ca34",
+		"name": "saving-account-poc",
+		"description": "# 💰 Saving Account API\n\nThis Postman collection simulates a basic saving account system with customer and teller roles.\n\n---\n\n## 📦 Available APIs\n\n- **Customer**\n    \n    - Register: `/api/auth/customer/register`\n        \n    - Login: `/api/auth/customer/login`\n        \n- **Teller**\n    \n    - Login: `/api/auth/teller/login`\n        \n- **Account**\n    \n    - Create: `/api/account/create`\n        \n    - View: `/api/account/info`\n        \n- **Transaction**\n    \n    - Deposit: `/api/transaction/deposit`\n        \n    - Transfer (Verify): `/api/transaction/transfer/verify`\n        \n    - Transfer (Confirm): `/api/transaction/transfer/confirm`\n        \n- **Statement**\n    \n    - Get monthly statement: `/api/statement`\n        \n\n---\n\n## 🚀 How to Use\n\n1. **Select environment**: Use `saving-account-local` or set `base_url` manually.\n    \n2. **Register and Login**\n    \n    - Register a customer.\n        \n    - Login as customer → token will be saved automatically to environment.\n        \n3. **Use token**\n    \n    - All requests use the saved token via `Authorization: Bearer {{access_token}}`\n        \n4. **Try key flows**\n    \n    - Register → Create account → Deposit → Transfer (verify → confirm) → Get statement\n        \n5. **Teller login**\n    \n    - Separate login available via `/auth/teller/login`\n        \n\n---\n\n## ⚠️ Notes\n\n- Transfer flow requires `verify` step before `confirm`.\n    \n- Only `confirm` requires a PIN.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "751777"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Register - Customer",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"citizenId\": \"1234567890103\",\n  \"password\": \"123456\",\n  \"pin\": \"112233\",\n  \"email\": \"jackie@example.com\",\n  \"thaiName\": \"ธัชพงศ์ จิรรัตนวงศ์\",\n  \"engName\": \"Thachapong Chirarattanawong\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/customer/register",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"customer",
+								"register"
+							]
+						},
+						"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+					},
+					"response": [
+						{
+							"name": "Register",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"citizenId\": \"1234567890104\",\n  \"password\": \"123456\",\n  \"pin\": \"112233\",\n  \"email\": \"jackie@example.com\",\n  \"thaiName\": \"ธัชพงศ์ จิรรัตนวงศ์\",\n  \"engName\": \"Thachapong Chirarattanawong\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api/auth/customer/register",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"auth",
+										"customer",
+										"register"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 03 May 2025 10:44:07 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 4,\n    \"citizenId\": \"1234567890104\",\n    \"email\": \"jackie@example.com\",\n    \"thaiName\": \"ธัชพงศ์ จิรรัตนวงศ์\",\n    \"engName\": \"Thachapong Chirarattanawong\",\n    \"accounts\": null\n}"
+						}
+					]
+				},
+				{
+					"name": "Login - Teller",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();",
+									"if (jsonData.token) {",
+									"    pm.environment.set(\"access_token_teller\", jsonData.token);",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"citizenId\": \"1234567890501\",\n  \"password\": \"123456\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/teller/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"teller",
+								"login"
+							]
+						},
+						"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+					},
+					"response": [
+						{
+							"name": "Login - Teller",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"citizenId\": \"1234567890501\",\n  \"password\": \"123456\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api/auth/teller/login",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"auth",
+										"teller",
+										"login"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 03 May 2025 10:44:51 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"token\": \"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwNTAxIiwicm9sZSI6IlRFTExFUiIsImlhdCI6MTc0NjI2OTA5MSwiZXhwIjoxNzQ2MzU1NDkxfQ.zYDcMmAi0404xvQDao055aaY38QYdC9zKNrX_QrMMho\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Login - Customer",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();",
+									"if (jsonData.token) {",
+									"    pm.environment.set(\"access_token_customer\", jsonData.token);",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"citizenId\": \"1234567890101\",\n  \"password\": \"123456\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/customer/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"customer",
+								"login"
+							]
+						},
+						"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+					},
+					"response": [
+						{
+							"name": "Login",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"citizenId\": \"1234567890101\",\n  \"password\": \"123456\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api/auth/customer/login",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"auth",
+										"customer",
+										"login"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 03 May 2025 10:45:20 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"token\": \"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwMTAxIiwicm9sZSI6IkNVU1RPTUVSIiwiaWF0IjoxNzQ2MjY5MTIwLCJleHAiOjE3NDYzNTU1MjB9.VcZP4wbRP8bNtnpBV8qv9sg3CSikOe4yLikFPO2WeM8\"\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Account",
+			"item": [
+				{
+					"name": "Account Create",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token_teller}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/account/create?citizenId=1234567890101&deposit=10",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"account",
+								"create"
+							],
+							"query": [
+								{
+									"key": "citizenId",
+									"value": "1234567890101"
+								},
+								{
+									"key": "deposit",
+									"value": "10"
+								}
+							]
+						},
+						"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+					},
+					"response": [
+						{
+							"name": "Create Account",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/account/create?citizenId=1234567890103&deposit=10",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"account",
+										"create"
+									],
+									"query": [
+										{
+											"key": "citizenId",
+											"value": "1234567890103"
+										},
+										{
+											"key": "deposit",
+											"value": "10"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 03 May 2025 10:45:03 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 4,\n    \"accountNumber\": \"4749770\",\n    \"balance\": 10\n}"
+						}
+					]
+				},
+				{
+					"name": "Accont View",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful DELETE request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 202, 204]);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token_customer}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/account/info?citizenId=1234567890101",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"account",
+								"info"
+							],
+							"query": [
+								{
+									"key": "citizenId",
+									"value": "1234567890101"
+								}
+							]
+						},
+						"description": "This is a DELETE request, and it is used to delete data that was previously created via a POST request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful DELETE request typically returns a `200 OK`, `202 Accepted`, or `204 No Content` response code."
+					},
+					"response": [
+						{
+							"name": "View",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api/account/info?citizenId=1234567890101",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"account",
+										"info"
+									],
+									"query": [
+										{
+											"key": "citizenId",
+											"value": "1234567890101"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 03 May 2025 11:51:13 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 1,\n    \"citizenId\": \"1234567890101\",\n    \"email\": \"jackie101@example.com\",\n    \"thaiName\": \"ธัชพงศ์ จิรรัตนวงศ์\",\n    \"engName\": \"Thachapong Chirarattanawong\",\n    \"accounts\": [\n        {\n            \"id\": 1,\n            \"accountNumber\": \"1234101\",\n            \"balance\": 9904\n        }\n    ]\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Trasnsaction",
+			"item": [
+				{
+					"name": "Deposit",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful PUT request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 204]);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token_teller}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"accountNumber\": \"1234101\",\n  \"amount\": 1,\n  \"channel\": \"BRANCH001\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/transaction/deposit",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"transaction",
+								"deposit"
+							]
+						},
+						"description": "This is a PUT request and it is used to overwrite an existing piece of data. For instance, after you create an entity with a POST request, you may want to modify that later. You can do that using a PUT request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful PUT request typically returns a `200 OK`, `201 Created`, or `204 No Content` response code."
+					},
+					"response": [
+						{
+							"name": "Deposit",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"accountNumber\": \"1234101\",\n  \"amount\": 1,\n  \"channel\": \"BRANCH001\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api/transaction/deposit",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"transaction",
+										"deposit"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 03 May 2025 10:46:05 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 1,\n    \"accountNumber\": \"1234101\",\n    \"balance\": 9914\n}"
+						}
+					]
+				},
+				{
+					"name": "Transfer Verify",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful PUT request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 204]);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token_customer}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"accountNumberFrom\": \"1234101\",\n    \"accountNumberTo\": \"1234102\",\n    \"amount\": 10,\n    \"channel\": \"MOBILEAPP\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/transaction/transfer/verify",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"transaction",
+								"transfer",
+								"verify"
+							]
+						},
+						"description": "This is a PUT request and it is used to overwrite an existing piece of data. For instance, after you create an entity with a POST request, you may want to modify that later. You can do that using a PUT request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful PUT request typically returns a `200 OK`, `201 Created`, or `204 No Content` response code."
+					},
+					"response": [
+						{
+							"name": "Transfer Verify",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"accountNumberFrom\": \"1234101\",\n  \"accountNumberTo\": \"1234102\",\n  \"amount\": 10,\n  \"channel\": \"MOBILEAPP\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api/transaction/transfer/verify",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"transaction",
+										"transfer",
+										"verify"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 03 May 2025 11:50:00 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Transfer Verify Successful, Please confirm within 60 seconds.\",\n    \"accountNumberFrom\": \"1234101\",\n    \"accountNumberTo\": \"1234102\",\n    \"amount\": 10,\n    \"channel\": \"MOBILEAPP\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Transfer Confirm",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful PUT request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 204]);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token_customer}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"accountNumberFrom\": \"1234101\",\n    \"accountNumberTo\": \"1234102\",\n    \"amount\": 10,\n    \"channel\": \"MOBILEAPP\",\n    \"pin\": \"112233\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/transaction/transfer/confirm",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"transaction",
+								"transfer",
+								"confirm"
+							]
+						},
+						"description": "This is a PUT request and it is used to overwrite an existing piece of data. For instance, after you create an entity with a POST request, you may want to modify that later. You can do that using a PUT request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful PUT request typically returns a `200 OK`, `201 Created`, or `204 No Content` response code."
+					},
+					"response": [
+						{
+							"name": "Transfer Confirm",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"accountNumberFrom\": \"1234101\",\n    \"accountNumberTo\": \"1234102\",\n    \"amount\": 10,\n    \"channel\": \"MOBILEAPP\",\n    \"pin\": \"112233\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api/transaction/transfer/confirm",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"transaction",
+										"transfer",
+										"confirm"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 03 May 2025 11:53:07 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Transfer Confirm Successful.\",\n    \"transaction\": {\n        \"id\": 28,\n        \"timestamp\": \"2025-05-03T11:53:07.289244259\",\n        \"type\": \"TRANSFER_OUT\",\n        \"code\": \"TFO\",\n        \"channel\": \"MOBILEAPP\",\n        \"amount\": 10,\n        \"balanceAfter\": 9894,\n        \"remark\": \"Transfer to 1234102\"\n    }\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Statement",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful DELETE request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 202, 204]);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token_customer}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/statement?accountNumber=1234101&year=2025&month=5",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"statement"
+					],
+					"query": [
+						{
+							"key": "accountNumber",
+							"value": "1234101"
+						},
+						{
+							"key": "year",
+							"value": "2025"
+						},
+						{
+							"key": "month",
+							"value": "5"
+						}
+					]
+				},
+				"description": "This is a DELETE request, and it is used to delete data that was previously created via a POST request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful DELETE request typically returns a `200 OK`, `202 Accepted`, or `204 No Content` response code."
+			},
+			"response": [
+				{
+					"name": "Statement",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/statement?accountNumber=1234101&year=2025&month=5",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"statement"
+							],
+							"query": [
+								{
+									"key": "accountNumber",
+									"value": "1234101"
+								},
+								{
+									"key": "year",
+									"value": "2025"
+								},
+								{
+									"key": "month",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "0"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"key": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"key": "Expires",
+							"value": "0"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Date",
+							"value": "Sat, 03 May 2025 10:46:48 GMT"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=60"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"account\": {\n        \"id\": 1,\n        \"accountNumber\": \"1234101\",\n        \"balance\": 9904\n    },\n    \"transactions\": [\n        {\n            \"id\": 3,\n            \"timestamp\": \"2025-05-02T23:11:39.04291\",\n            \"type\": \"TRANSFER_OUT\",\n            \"code\": \"TFO\",\n            \"channel\": \"MOBILEAPP\",\n            \"amount\": 10,\n            \"balanceAfter\": 9980,\n            \"remark\": \"Transfer to 1234102\"\n        },\n        {\n            \"id\": 5,\n            \"timestamp\": \"2025-05-02T23:30:12.254547\",\n            \"type\": \"DEPOSIT\",\n            \"code\": \"DEP\",\n            \"channel\": \"BRANCH001\",\n            \"amount\": 1,\n            \"balanceAfter\": 9981,\n            \"remark\": \"Deposit\"\n        },\n        {\n            \"id\": 6,\n            \"timestamp\": \"2025-05-02T23:30:28.860798\",\n            \"type\": \"DEPOSIT\",\n            \"code\": \"DEP\",\n            \"channel\": \"BRANCH001\",\n            \"amount\": 1,\n            \"balanceAfter\": 9982,\n            \"remark\": \"Deposit\"\n        },\n        {\n            \"id\": 7,\n            \"timestamp\": \"2025-05-02T23:31:47.639837\",\n            \"type\": \"TRANSFER_OUT\",\n            \"code\": \"TFO\",\n            \"channel\": \"MOBILEAPP\",\n            \"amount\": 10,\n            \"balanceAfter\": 9972,\n            \"remark\": \"Transfer to 1234102\"\n        },\n        {\n            \"id\": 9,\n            \"timestamp\": \"2025-05-02T23:32:14.370289\",\n            \"type\": \"TRANSFER_OUT\",\n            \"code\": \"TFO\",\n            \"channel\": \"MOBILEAPP\",\n            \"amount\": 10,\n            \"balanceAfter\": 9962,\n            \"remark\": \"Transfer to 1234102\"\n        },\n        {\n            \"id\": 11,\n            \"timestamp\": \"2025-05-02T23:32:33.71366\",\n            \"type\": \"TRANSFER_OUT\",\n            \"code\": \"TFO\",\n            \"channel\": \"MOBILEAPP\",\n            \"amount\": 10,\n            \"balanceAfter\": 9952,\n            \"remark\": \"Transfer to 1234102\"\n        },\n        {\n            \"id\": 13,\n            \"timestamp\": \"2025-05-02T23:35:21.163244\",\n            \"type\": \"TRANSFER_OUT\",\n            \"code\": \"TFO\",\n            \"channel\": \"MOBILEAPP\",\n            \"amount\": 10,\n            \"balanceAfter\": 9942,\n            \"remark\": \"Transfer to 1234102\"\n        },\n        {\n            \"id\": 15,\n            \"timestamp\": \"2025-05-02T23:42:13.409988\",\n            \"type\": \"TRANSFER_OUT\",\n            \"code\": \"TFO\",\n            \"channel\": \"MOBILEAPP\",\n            \"amount\": 10,\n            \"balanceAfter\": 9932,\n            \"remark\": \"Transfer to 1234102\"\n        },\n        {\n            \"id\": 17,\n            \"timestamp\": \"2025-05-02T23:44:44.212113\",\n            \"type\": \"TRANSFER_OUT\",\n            \"code\": \"TFO\",\n            \"channel\": \"MOBILEAPP\",\n            \"amount\": 10,\n            \"balanceAfter\": 9922,\n            \"remark\": \"Transfer to 1234102\"\n        },\n        {\n            \"id\": 19,\n            \"timestamp\": \"2025-05-03T00:10:43.432685\",\n            \"type\": \"TRANSFER_OUT\",\n            \"code\": \"TFO\",\n            \"channel\": \"MOBILEAPP\",\n            \"amount\": 10,\n            \"balanceAfter\": 9912,\n            \"remark\": \"Transfer to 1234102\"\n        },\n        {\n            \"id\": 24,\n            \"timestamp\": \"2025-05-03T17:46:03.895865\",\n            \"type\": \"DEPOSIT\",\n            \"code\": \"DEP\",\n            \"channel\": \"BRANCH001\",\n            \"amount\": 1,\n            \"balanceAfter\": 9913,\n            \"remark\": \"Deposit\"\n        },\n        {\n            \"id\": 25,\n            \"timestamp\": \"2025-05-03T17:46:05.322722\",\n            \"type\": \"DEPOSIT\",\n            \"code\": \"DEP\",\n            \"channel\": \"BRANCH001\",\n            \"amount\": 1,\n            \"balanceAfter\": 9914,\n            \"remark\": \"Deposit\"\n        },\n        {\n            \"id\": 26,\n            \"timestamp\": \"2025-05-03T17:46:18.288816\",\n            \"type\": \"TRANSFER_OUT\",\n            \"code\": \"TFO\",\n            \"channel\": \"MOBILEAPP\",\n            \"amount\": 10,\n            \"balanceAfter\": 9904,\n            \"remark\": \"Transfer to 1234102\"\n        }\n    ]\n}"
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer"
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8080"
+		}
+	]
+}
