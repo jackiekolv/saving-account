@@ -82,7 +82,7 @@ public class AccountControllerMvcTest {
                         .param("deposit", "1.0"))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("Customer not found."));
+                .andExpect(jsonPath("$.message").value("Customer not found for citizenId: 1234567890101"));
     }
 
     @Test

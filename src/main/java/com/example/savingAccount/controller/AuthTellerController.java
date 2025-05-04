@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.validation.annotation.Validated;
@@ -25,6 +26,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/auth/teller")
 @RequiredArgsConstructor
+@Slf4j
 public class AuthTellerController {
 
     private final TellerRepository tellerRepository;
@@ -33,14 +35,20 @@ public class AuthTellerController {
     // -------------------- Login --------------------
     @PostMapping("/login")
     public Map<String, String> login(@Valid @RequestBody LoginRequest request) {
+        log.info("Attempting login for teller with citizenId: {}", request.getCitizenId());
         Teller teller = tellerRepository.findByCitizenId(request.getCitizenId())
-                .orElseThrow(() -> new UnauthorizedException("Teller not found"));
+                .orElseThrow(() -> {
+                    log.warn("Teller not found for citizenId: {}", request.getCitizenId());
+                    return new UnauthorizedException("Teller not found for citizenId: " + request.getCitizenId());
+                });
 
         if (!BCrypt.checkpw(request.getPassword(), teller.getPassword())) {
-            throw new UnauthorizedException("Invalid password");
+            log.warn("Invalid password for teller with citizenId: {}", request.getCitizenId());
+            throw new UnauthorizedException("Invalid password for citizenId: " + request.getCitizenId());
         }
 
         String jwt = jwtUtil.generateToken(teller.getCitizenId(), Role.TELLER);
+        log.info("Login successful for teller with citizenId: {}", request.getCitizenId());
         return Map.of("token", jwt);
     }
 

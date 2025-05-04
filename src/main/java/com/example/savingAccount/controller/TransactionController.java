@@ -10,6 +10,8 @@ import com.example.savingAccount.service.AccountService;
 import com.example.savingAccount.service.PinValidator;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
@@ -29,6 +31,8 @@ import java.util.Objects;
 @Validated
 public class TransactionController {
 
+    private static final Logger log = LoggerFactory.getLogger(TransactionController.class);
+
     private final AccountService accountService;
     private final PinValidator pinValidator;
     private final CacheManager cacheManager;
@@ -36,6 +40,7 @@ public class TransactionController {
     @PreAuthorize("hasRole('TELLER')")
     @PostMapping("/deposit")
     public Account deposit(@Valid @RequestBody DepositRequest request) {
+        log.info("Deposit request received: account={}, amount={}, channel={}", request.getAccountNumber(), request.getAmount(), request.getChannel());
         return accountService.deposit(request.getAccountNumber(), request.getAmount(), request.getChannel());
     }
 
@@ -44,7 +49,7 @@ public class TransactionController {
     @PreAuthorize("hasRole('CUSTOMER') and @authAccount.isOwner(#request.accountNumberFrom, authentication.name)")
     @Cacheable(value = "verifyCache", key = "#request.accountNumberFrom")
     public TransferRequest transferVerify(@Valid @RequestBody TransferRequest request, Authentication authentication) {
-
+        log.info("Transfer verify request by {}: {}", authentication.getName(), request);
         return accountService.transferVerify(request);
     }
 
@@ -54,18 +59,22 @@ public class TransactionController {
     @CacheEvict(value = "verifyCache", key = "#request.accountNumberFrom")
     public ResponseEntity<?> transferConfirm(@Valid @RequestBody TransferRequest request,
                                       Authentication authentication) {
+        log.info("Transfer confirm request by {}: {}", authentication.getName(), request);
 
         String key = request.getAccountNumberFrom();
         TransferRequest requestVerified = Objects.requireNonNull(cacheManager.getCache("verifyCache")).get(key, TransferRequest.class);
 
         if (requestVerified == null) {
+            log.warn("No verified request found in cache for account: {}", key);
             throw new BadRequestException("Please verify before confirming");
         }else if (!request.equals(requestVerified)) {
-            throw new BadRequestException("Verify and Confirm does not matched, Please perform new verification.");
+            log.warn("Request mismatch: verified={}, confirm={}", requestVerified, request);
+            throw new BadRequestException("Transfer data mismatch. Please re-verify before confirming.");
         }
 
         String citizenId = authentication.getName();
         pinValidator.validate(citizenId, request.getPin());
+        log.info("PIN validated and transfer confirmed for account: {}", key);
         Transaction fromTxn = accountService.transferConfirm(requestVerified);
 
         return ResponseEntity.ok(Map.of(

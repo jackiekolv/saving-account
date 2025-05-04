@@ -12,10 +12,9 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.test.web.servlet.MockMvc;
+import static org.hamcrest.Matchers.startsWith;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-
 import java.util.Optional;
-
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -76,7 +75,7 @@ public class AuthTellerControllerMvcTest {
                                     }
                                 """))
                 .andExpect(status().isUnauthorized())
-                .andExpect(jsonPath("$.message").value("Invalid password"));
+                .andExpect(jsonPath("$.message").value("Invalid password for citizenId: 1234567890501"));
     }
 
     @Test
@@ -94,7 +93,7 @@ public class AuthTellerControllerMvcTest {
                                     }
                                 """))
                 .andExpect(status().isUnauthorized())
-                .andExpect(jsonPath("$.message").value("Teller not found"));
+                .andExpect(jsonPath("$.message").value(startsWith("Teller not found")));
     }
 
     @Test

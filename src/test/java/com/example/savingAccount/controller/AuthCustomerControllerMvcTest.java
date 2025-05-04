@@ -13,6 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import java.util.Optional;
+import static org.hamcrest.Matchers.startsWith;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -82,7 +83,7 @@ public class AuthCustomerControllerMvcTest {
                                     }
                                 """))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("This Citizen ID is already exist!"));
+                .andExpect(jsonPath("$.message").value(startsWith("Citizen ID already exists")));
     }
 
     @Test
@@ -124,7 +125,7 @@ public class AuthCustomerControllerMvcTest {
                                     }
                                 """))
                 .andExpect(status().isUnauthorized())
-                .andExpect(jsonPath("$.message").value("Invalid password"));
+                .andExpect(jsonPath("$.message").value("Login failed - invalid password for citizenId: 1234567890101"));
     }
 
     @Test
@@ -145,7 +146,7 @@ public class AuthCustomerControllerMvcTest {
                                     }
                                 """))
                 .andExpect(status().isUnauthorized())
-                .andExpect(jsonPath("$.message").value("Customer not found"));
+                .andExpect(jsonPath("$.message").value("Login failed - customer not found: 1234567890109"));
     }
 
     @Test
