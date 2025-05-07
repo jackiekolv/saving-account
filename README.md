@@ -51,7 +51,7 @@ This will start both the app and the in-memory database (if defined in docker-co
 
 ### Postman Collection
 
-The Postman Collection and Environment files are included in the `postman/` folder.
+The Postman Collection and Environment files are included in the ==> [postman](https://github.com/jackiekolv/saving-account/tree/main/postman) folder.
 
 - `postman/saving-account-poc.postman_collection.json`
 - `postman/saving-account-local.postman_environment.json`
@@ -87,8 +87,6 @@ Run all unit and integration tests:
 mvn test
 ```
 
-Generate test coverage report (e.g. using IntelliJ or Jacoco plugin).
-
 ## Sample Available Data
 
 - **Customer #1**
@@ -122,6 +120,15 @@ Generate test coverage report (e.g. using IntelliJ or Jacoco plugin).
 - You can use this token to call secured APIs such as `/account/info`, `/transaction/**`, and `/statement`.
 
 ## 🧑‍💻 How to Use (Step-by-step Guide)
+
+### Postman Collection
+
+The Postman Collection and Environment files are included in the ==> [postman](https://github.com/jackiekolv/saving-account/tree/main/postman) folder.
+
+- `postman/saving-account-poc.postman_collection.json`
+- `postman/saving-account-local.postman_environment.json`
+
+You can import them into Postman to quickly try out the API endpoints.
 
 This guide walks you through how to use the Saving Account system from login to making a transaction.
 
